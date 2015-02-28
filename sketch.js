@@ -1,7 +1,5 @@
   var tunnelCntr = 0;
-  var speed;
-
-  var numberOfTunnels= 100;
+  var numberOfTunnels= 2;
   var tunnels = [];
 
 function tunnel(){
@@ -11,6 +9,7 @@ function tunnel(){
   this.cntr = 0;
   this.speed = 10;
   this.drawing= false;
+  this.color = color(random(255), random(255), random(255));
 }
 
 function setup(){
@@ -23,22 +22,28 @@ function setup(){
 
 function draw(){
   background(255);
+  tunnelLoop();
   for(i = 0; i < numberOfTunnels; i++){
-     
+     drawTunnel(tunnels[i]);
   }
 }
-
-
 
 function tunnelLoop(){
   if(tunnels[tunnelCntr].size > displayWidth){
     tunnels[tunnelCntr].drawing = false;
-    tunnelCntr++;
+    tunnels[tunnelCntr].size = 0;
+    if(tunnelCntr == numberOfTunnels - 1){
+      tunnelCntr = 0;
+    }else{
+      tunnelCntr++;
+    }
+    tunnels[tunnelCntr].drawing = true;
   }
 }
 
 function drawTunnel(tunnel){
   if(tunnel.drawing){
+    fill(tunnel.color);
     ellipse(tunnel.x, tunnel.y, tunnel.size, tunnel.size);
     tunnel.size+=tunnel.speed;
   }
