@@ -3,6 +3,15 @@
   var tunnels = [];
   var colors = [];
   var dude;
+  var nautImg;
+
+  var numberOfObstacles = 10;
+  var obstacles = [];
+  var o;
+
+function preload(){
+  nautImg = loadImage("images/naut.png");
+}
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
@@ -18,6 +27,11 @@ function setup(){
   dude = new character();
   fill(0);
   rect(0, 0, displayWidth, displayHeight);
+  o = new obstacle();
+
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i] = new obstacle();
+  }
 }
 
 function draw(){
@@ -27,7 +41,12 @@ function draw(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
+
+  for(i = 0; i < numberOfObstacles; i++){
+    drawObstacle(obstacles[i]);
+  }
   drawCharacter();
+  drawObstacle(o);
 }
 
 function keyPressed(){
@@ -49,8 +68,9 @@ function keyPressed(){
 function drawCharacter(){
     noStroke();
     rectMode(CENTER);
-    fill(255);
-    rect(dude.x, dude.y, 200, 200);
+    //fill(255);
+    //rect(dude.x, dude.y, 200, 200);
+    image(nautImg, dude.x, dude.y);
 }
 
 function character(){
@@ -109,4 +129,20 @@ function getColor(){
     colorCntr++;
   }
   return c;
+}
+
+function obstacle(){
+  this.x = displayWidth / 2;
+  this.y = displayHeight / 2;
+  this.size = 100;
+  this.speedX = random(-1, 1);
+  this.speedY = random(-1, 1);
+}
+
+function drawObstacle(obstacle){
+  fill(255);
+  noStroke();
+  rect(obstacle.x, obstacle.y, obstacle.size, obstacle.size);
+  obstacle.x += obstacle.speedX;
+  obstacle.y += obstacle.speedY;
 }
