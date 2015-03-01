@@ -166,8 +166,8 @@ function playGame(){
   fill(0);
   noStroke();
   rect(displayWidth - 200, 0, 100, 35);
-  fill(colors[1]);
-  text("Lives: " + dude.lives, displayWidth - 200, 30);
+  fill(colors[0]);
+  text("<3: " + dude.lives, displayWidth - 200, 30);
 
   drawObstacles();
   drawCharacter();
