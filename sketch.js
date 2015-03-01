@@ -1,16 +1,25 @@
-  var tunnelCntr = 0;
-  var numberOfTunnels= 10;
-  var tunnels = [];
-  var colors = [];
-  var dude;
-  var nautImg;
 
-  var numberOfObstacles = 10;
-  var obstacles = [];
-  var o;
+var stateStart = 0;
+var statePlaying = 1;
+var stateGameOver = 2;
+var statePaused = 3;
+var state = stateStart;
+
+var tunnelCntr = 0;
+var numberOfTunnels= 10;
+var tunnels = [];
+var colors = [];
+var dude;
+var nautImg;
+var numberOfObstacles = 10;
+var obstacles = [];
+var o;
+var startImg;
+
 
 function preload(){
   nautImg = loadImage("images/naut.png");
+  startImg = loadImage("images/SpacewayName.png");
 }
 
 function setup(){
@@ -35,18 +44,11 @@ function setup(){
 }
 
 function draw(){
-  fill(0, 5);
-  rect(0, 0, displayWidth, displayHeight);
-  tunnelLoop();
-  for(i = 0; i < numberOfTunnels; i++){
-     drawTunnel(tunnels[i]);
+  if(state === stateStart){
+    drawStartScreen();
+  }else if(state === statePlaying){
+    playGame();
   }
-
-  for(i = 0; i < numberOfObstacles; i++){
-    drawObstacle(obstacles[i]);
-  }
-  drawCharacter();
-  drawObstacle(o);
 }
 
 function keyPressed(){
@@ -63,6 +65,25 @@ function keyPressed(){
     dude.y-=dude.speed;
   }
   return false;
+}
+
+function drawStartScreen(){
+  image(startImg, 0, 0, displayWidth, displayHeight);
+}
+
+function playGame(){
+  fill(0, 5);
+  rect(0, 0, displayWidth, displayHeight);
+  tunnelLoop();
+  for(i = 0; i < numberOfTunnels; i++){
+     drawTunnel(tunnels[i]);
+  }
+
+  for(i = 0; i < numberOfObstacles; i++){
+    drawObstacle(obstacles[i]);
+  }
+  drawCharacter();
+  drawObstacle(o);
 }
 
 function drawCharacter(){
