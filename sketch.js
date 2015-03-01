@@ -20,6 +20,7 @@ var score = 0;
 var maxPowerups = 10;
 var powerups = [];
 var activePowerupCount = 0;
+var music;
 
   // Blocks
   var blocks = {};
@@ -69,6 +70,7 @@ function preload(){
   };
   startImg = loadImage("images/SpacewayName.png");
   gameOverImg = loadImage("images/gameover.jpg");
+  music = new Audio('Starway.m4a');
 }
 
 function setup(){
@@ -93,6 +95,7 @@ function setup(){
   for(i = 0; i < maxPowerups; i++) {
     powerups[i] = new block();
   }
+  music.play();
 }
 
 function draw(){
@@ -160,6 +163,7 @@ function restartState(){
   for(i = 0; i < numberOfTunnels; i++){
      tunnels[i].size = 0;
   }
+  score = 0;
 }
 
 function drawStartScreen(){
@@ -178,9 +182,12 @@ function playGame(){
      drawTunnel(tunnels[i]);
   }
   textSize(40);
+  fill(0);
+  noStroke();
+  rect(0, 0, 220, 35);
+  fill(0, 102, 153);
   text("Score: " + score, 10, 30); 
   score+=1;
-  fill(0, 102, 153);
 
   drawObstacles();
   drawCharacter();
