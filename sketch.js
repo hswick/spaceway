@@ -1,25 +1,69 @@
+  
+  // Tunnel related variables
   var tunnelCntr = 0;
   var numberOfTunnels= 10;
   var tunnels = [];
   var colors = [];
+
+  // Character
   var dude;
   var nautImg;
 
+  // Obstacles
   var numberOfObstacles = 10;
   var obstacles = [];
   var o;
 
+  // Blocks
+  var block;
+  var blocks = {};
+
 function preload(){
   nautImg = loadImage("images/naut.png");
+
+  blocks = {
+    "blue" : [
+        loadImage("images/block_b1.png"),
+        loadImage("images/block_b2.png"),
+        loadImage("images/block_b3.png")
+    ],
+    "green" : [
+        loadImage("images/block_g1.png"),
+        loadImage("images/block_g2.png"),
+        loadImage("images/block_g3.png")
+    ],
+    "grey" : [
+        loadImage("images/block_grey1.png"),
+        loadImage("images/block_grey2.png")
+    ],
+    "orange" : [
+        loadImage("images/block_o1.png"),
+        loadImage("images/block_o2.png"),
+        loadImage("images/block_o3.png")
+    ],
+    "pink" : [
+        loadImage("images/block_p1.png"),
+        loadImage("images/block_p2.png"),
+        loadImage("images/block_p3.png")
+    ],
+    "white" : [
+        loadImage("images/block_w1.png"),
+        loadImage("images/block_w2.png"),
+        loadImage("images/block_w3.png")
+    ],
+    "yellow" : [
+        loadImage("images/block_y1.png"),
+        loadImage("images/block_y2.png"),
+        loadImage("images/block_y3.png")
+    ]
+  };
 }
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
-
   colors[0] = color(255, 0, 255);
   colors[1] = color(0, 175, 239);
   colors[2] = color(0, 255, 0);
-
   for(i = 0; i < numberOfTunnels; i++){
      tunnels[i] = new tunnel();
   }
@@ -27,11 +71,12 @@ function setup(){
   dude = new character();
   fill(0);
   rect(0, 0, displayWidth, displayHeight);
+  block = new block();
   o = new obstacle();
-
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
+  
 }
 
 function draw(){
@@ -47,6 +92,7 @@ function draw(){
   }
   drawCharacter();
   drawObstacle(o);
+  drawBlock();
 }
 
 function keyPressed(){
@@ -145,4 +191,20 @@ function drawObstacle(obstacle){
   rect(obstacle.x, obstacle.y, obstacle.size, obstacle.size);
   obstacle.x += obstacle.speedX;
   obstacle.y += obstacle.speedY;
+}
+
+
+// Block stuff
+function block(){
+  this.x = displayWidth / 2;
+  this.y = displayHeight / 2;
+}
+
+function drawBlock(){
+    noStroke();
+    image(blocks.green[1], block.x, block.y);
+}
+
+function randBlock(){
+  var rand = Math.floor(Math.random()*3) + 1;
 }
