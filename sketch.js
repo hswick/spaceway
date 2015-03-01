@@ -13,9 +13,7 @@ var dude;
 var nautImg;
 var numberOfObstacles = 10;
 var obstacles = [];
-var o;
 var startImg;
-
 
   // Blocks
   var block;
@@ -80,7 +78,6 @@ function setup(){
   fill(0);
   rect(0, 0, displayWidth, displayHeight);
   block = new block();
-  o = new obstacle();
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
@@ -92,30 +89,36 @@ function draw(){
     drawStartScreen();
   }else if(state === statePlaying){
     playGame();
+  }else if(state === stateGameOver){
+    fill(255);
+    rect(0, 0, displayWidth, displayHeight);
   }
-
-  for(i = 0; i < numberOfObstacles; i++){
-    drawObstacle(obstacles[i]);
-  }
-  drawCharacter();
-  drawObstacle(o);
-  drawInvader();
 }
 
 function keyPressed(){
-  if(keyCode === LEFT_ARROW){
-    dude.x-=dude.speed;
-  }
-  if(keyCode === RIGHT_ARROW){
-    dude.x+=dude.speed;
-  }
-  if(keyCode === DOWN_ARROW){
-    dude.y+=dude.speed;
-  }
-  if(keyCode === UP_ARROW){
-    dude.y-=dude.speed;
+  if(state === stateStart){
+    state = statePlaying;
+  }else if(state === statePlaying){
+    if(keyCode === LEFT_ARROW){
+      dude.x-=dude.speed;
+    }
+    if(keyCode === RIGHT_ARROW){
+      dude.x+=dude.speed;
+    }
+    if(keyCode === DOWN_ARROW){
+      dude.y+=dude.speed;
+    }
+    if(keyCode === UP_ARROW){
+      dude.y-=dude.speed;
+    }
   }
   return false;
+}
+
+function keyTyped(){
+  if(key === 'p'){
+    state = statePaused;
+  }
 }
 
 function drawStartScreen(){
@@ -129,19 +132,12 @@ function playGame(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
-
-  for(i = 0; i < numberOfObstacles; i++){
-    drawObstacle(obstacles[i]);
-  }
+  drawObstacles();
   drawCharacter();
-  drawObstacle(o);
+  collisionDetection();
 }
 
 function drawCharacter(){
-    noStroke();
-    rectMode(CENTER);
-    //fill(255);
-    //rect(dude.x, dude.y, 200, 200);
     image(nautImg, dude.x, dude.y);
 }
 
@@ -179,7 +175,6 @@ function tunnelLoop(){
   }
 }
 
-
 function drawTunnel(tunnel){
   if(tunnel.drawing){
     stroke(tunnel.color, tunnel.a);
@@ -204,9 +199,24 @@ function getColor(){
   return c;
 }
 
+function collisionDetection(){
+  for(i = 0; i < numberOfObstacles; i++){
+    hitObstacle(obstacles[i]);
+  }
+}
+
+function hitObstacle(obstacle){
+  if(obstacle.x <= dude.x
+    && obstacle.x+obstacle.size >= dude.x
+    && obstacle.y <= dude.y
+    && obstacle.y+obstacle.size >= dude.y){
+    state = stateGameOver;
+  }
+}
+
 function obstacle(){
-  this.x = displayWidth / 2;
-  this.y = displayHeight / 2;
+  this.x = 200;
+  this.y = 200;
   this.size = 100;
   this.speedX = random(-1, 1);
   this.speedY = random(-1, 1);
@@ -220,6 +230,11 @@ function drawObstacle(obstacle){
   obstacle.y += obstacle.speedY;
 }
 
+function drawObstacles(){
+  for(i = 0; i < numberOfObstacles; i++){
+    drawObstacle(obstacles[i]);
+  }
+}
 
 /// Block stuff
 function block(){
