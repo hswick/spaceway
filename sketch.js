@@ -163,6 +163,12 @@ function playGame(){
   text("Score: " + score, 10, 30); 
   score+=1;
 
+  fill(0);
+  noStroke();
+  rect(displayWidth - 200, 0, 100, 35);
+  fill(colors[1]);
+  text("Lives: " + dude.lives, displayWidth - 200, 30);
+
   drawObstacles();
   drawCharacter();
   collisionDetection();
@@ -186,7 +192,7 @@ function character(){
   this.x = displayWidth / 2;
   this.y = displayHeight / 2;
   this.speed = 20;
-  this.lives = 0;
+  this.lives = 1;
 }
 
 function tunnel(){
@@ -329,7 +335,7 @@ function hitLife(){
     && life.y <= dude.y + 80
     && life.y+20 >= dude.y){
     dude.lives++;
-    life.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    life.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
     life.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   }
 }
@@ -340,7 +346,7 @@ function hitSlowmo(){
     && slowmo.x+20 >= dude.x
     && slowmo.y <= dude.y + 80
     && slowmo.y+20 >= dude.y){
-    slowmo.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    slowmo.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
     slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].speedX = random(-1, 1);
@@ -356,7 +362,7 @@ function hitSlowmo(){
     && slowmo.y <= dude.y + 80
     && slowmo.y+20 >= dude.y){
     slowmo.timer = 0;
-    slowmo.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    slowmo.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
     slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].speedX = random(-1, 1);
@@ -381,7 +387,7 @@ function hitClear(){
     && clear.x+20 >= dude.x
     && clear.y <= dude.y + 80
     && clear.y+20 >= dude.y){
-    clear.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    clear.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
     clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].x = -100;
@@ -399,7 +405,7 @@ function hitClear(){
     && clear.x+20 >= dude.x
     && clear.y <= dude.y + 80
     && clear.y+20 >= dude.y){
-    clear.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    clear.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
     clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].x = -100;
