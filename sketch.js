@@ -15,6 +15,7 @@ var numberOfObstacles = 10;
 var obstacles = [];
 var o;
 var startImg;
+var gameOverImg
 
 
   // Blocks
@@ -61,6 +62,7 @@ function preload(){
     ]
   };
   startImg = loadImage("images/SpacewayName.png");
+  gameOverImg = loadImage("images/.png")
 }
 
 function setup(){
@@ -89,6 +91,9 @@ function draw(){
   }else if(state === statePlaying){
     playGame();
   }
+  else if(state == stateGameOver){
+    terminateGame();
+  }
 
   for(i = 0; i < numberOfObstacles; i++){
     drawObstacle(obstacles[i]);
@@ -116,6 +121,11 @@ function keyPressed(){
 
 function drawStartScreen(){
   image(startImg, 0, 0, displayWidth, displayHeight);
+}
+
+function terminateGame()
+{
+  image(gameOverImg, 0, 0, displayWidth, displayHeight);
 }
 
 function playGame(){
