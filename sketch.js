@@ -30,6 +30,7 @@ var music;
   //Powerups
   var slowmo;
   var life;
+  var clear;
 
 function preload(){
   nautImg = loadImage("images/naut.png");
@@ -38,10 +39,12 @@ function preload(){
   music = new Audio('Starway.m4a');
   powerups = {
     "slowmo": loadImage("images/block_b1.png"),
-    "life": loadImage("images/heart.png")
+    "life": loadImage("images/heart.png"),
+    "clear": loadImage("images/block_grey1.png")
   };
   slowmo = new block();
   life = new block();
+  clear = new block();
 }
 
 function setup(){
@@ -125,6 +128,8 @@ function keyTyped(){
 
 function restartState(){
   dude = new character();
+  obstacles = [];
+  numberOfObstacles = 5;
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
@@ -164,6 +169,13 @@ function playGame(){
   drawPowerups();
   hitLife();
   hitSlowmo();
+  hitClear();
+  if(score % 100 === 0){
+    for(i = 0; i < 5; i++){
+      obstacles.push(new obstacle());
+      numberOfObstacles++;
+    }
+  }
 }
 
 function drawCharacter(){
@@ -289,17 +301,21 @@ function drawObstacles(){
 function drawPowerups() {
   image(powerups["slowmo"], slowmo.x, slowmo.y);
   image(powerups["life"], life.x, life.y);
+  image(powerups["clear"], clear.x, clear.y);
 }
 
 function resetPowerUps(){
   slowmo = new block();
   life = new block();
+  clear = new block();
 }
 
 /// Block stuff
 function block(){
   this.x = random(0, displayWidth);
   this.y = random(0, displayHeight);
+  this.timer = 0;
+  this.hit = false;
 }
 
 function invader(){
@@ -319,7 +335,8 @@ function hitLife(){
 }
 
 function hitSlowmo(){
-  if(slowmo.x <= dude.x + 50
+  if(!slowmo.hit){
+    if(slowmo.x <= dude.x + 50
     && slowmo.x+20 >= dude.x
     && slowmo.y <= dude.y + 80
     && slowmo.y+20 >= dude.y){
@@ -328,6 +345,79 @@ function hitSlowmo(){
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].speedX = random(-1, 1);
     obstacles[i].speedY = random(-1, 1);
+  }
+  slowmo.hit = true;
+  }
+  }
+  if(slowmo.hit){
+    slowmo.timer++;
+  }
+  if(slowmo.timer === 200){
+    slowmo.hit = false;
+    slowmo.timer = 0;
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-5, 5);
+    obstacles[i].speedY = random(-5, 5);
+  }
+  }
+}
+
+function hitSlowmo(){
+  if(!slowmo.hit){
+    if(slowmo.x <= dude.x + 50
+    && slowmo.x+20 >= dude.x
+    && slowmo.y <= dude.y + 80
+    && slowmo.y+20 >= dude.y){
+    slowmo.x = random(0, displayWidth);
+    slowmo.y = random(0, displayHeight);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-1, 1);
+    obstacles[i].speedY = random(-1, 1);
+  }
+  slowmo.hit = true;
+  }
+  }
+  if(slowmo.hit){
+    slowmo.timer++;
+  }
+  if(slowmo.timer === 200){
+    slowmo.hit = false;
+    slowmo.timer = 0;
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-5, 5);
+    obstacles[i].speedY = random(-5, 5);
+  }
+  }
+}
+
+function hitClear(){
+  if(!clear.hit){
+    if(clear.x <= dude.x + 50
+    && clear.x+20 >= dude.x
+    && clear.y <= dude.y + 80
+    && clear.y+20 >= dude.y){
+    clear.x = random(0, displayWidth);
+    clear.y = random(0, displayHeight);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = -100;
+    obstacles[i].y = -100;
+    obstacles[i].speedX = 0;
+    obstacles[i].speedY = 0;
+  }
+  clear.hit = true;
+  }
+  }
+  if(clear.hit){
+    clear.timer++;
+  }
+  if(clear.timer === 200){
+    clear.hit = false;
+    clear.timer = 0;
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = displayWidth / 2;
+    obstacles[i].y = 10;
+    obstacles[i].speedX = random(-5, 5);
+    obstacles[i].speedY = random(-5, 5);
   }
   }
 }
