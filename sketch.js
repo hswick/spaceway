@@ -11,7 +11,7 @@ var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 0;
+var numberOfObstacles = 100;
 var obstacles = [];
 var startImg;
 var gameOverImg
@@ -172,8 +172,7 @@ function playGame(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
-  drawObstacles();  
-  //keepWithinBounds();
+  drawObstacles();
   drawCharacter();
   collisionDetection();
 }
@@ -247,9 +246,9 @@ function collisionDetection(){
 }
 
 function hitObstacle(obstacle){
-  if(obstacle.x <= dude.x
+  if(obstacle.x <= dude.x + 80
     && obstacle.x+obstacle.size >= dude.x
-    && obstacle.y <= dude.y
+    && obstacle.y <= dude.y + 100
     && obstacle.y+obstacle.size >= dude.y){
     state = stateGameOver;
   }
