@@ -14,10 +14,14 @@ var nautImg;
 var numberOfObstacles = 50;
 var obstacles = [];
 var startImg;
-var gameOverImg
+var gameOverImg;
+var score = 0;
+
+var maxPowerups = 10;
+var powerups = [];
+var activePowerupCount = 0;
 
   // Blocks
-  var block;
   var blocks = {};
 
   // Invader
@@ -83,11 +87,12 @@ function setup(){
 
   tunnels[0].drawing = true;
   dude = new character();
-  block = new block();
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
-  inv = new invader();
+  for(i = 0; i < maxPowerups; i++) {
+    powerups[i] = new block();
+  }
 }
 
 function draw(){
@@ -172,9 +177,15 @@ function playGame(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
+  textSize(40);
+  text("Score: " + score, 10, 30); 
+  score+=1;
+  fill(0, 102, 153);
+
   drawObstacles();
   drawCharacter();
   collisionDetection();
+  drawPowerups();
 }
 
 function drawCharacter(){
@@ -289,14 +300,20 @@ function drawObstacles(){
   }
 }
 
-/// Block stuff
-function block(){
-  this.x = displayWidth / 2;
-  this.y = displayHeight / 2;
+function drawPowerups() {
+  var rand = Math.floor(Math.random()*100);
+  if (rand === 5 && activePowerupCount < 10) {
+      activePowerupCount+=1;
+  }
+  for(i = 0; i < activePowerupCount; ++i) {
+    image(blocks.blue[0], powerups[i].x, powerups[i].y);
+  }
 }
 
-function randBlock(){
-  var rand = Math.floor(Math.random()*3) + 1;
+/// Block stuff
+function block(){
+  this.x = Math.floor(Math.random()*displayWidth);
+  this.y = Math.floor(Math.random()*displayHeight);
 }
 
 function invader(){

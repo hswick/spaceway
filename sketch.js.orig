@@ -11,13 +11,17 @@ var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 100;
+var numberOfObstacles = 50;
 var obstacles = [];
 var startImg;
-var gameOverImg
+var gameOverImg;
+var score = 0;
+
+var maxPowerups = 10;
+var powerups = [];
+var activePowerupCount = 0;
 
   // Blocks
-  var block;
   var blocks = {};
 
   // Invader
@@ -64,67 +68,88 @@ function preload(){
     ]
   };
   startImg = loadImage("images/SpacewayName.png");
-  gameOverImg = loadImage("images/.png")
+  gameOverImg = loadImage("images/gameover.jpg");
 }
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
+
+  fill(0);
+  rect(0, 0, displayWidth, displayHeight);
+
   colors[0] = color(255, 0, 255);
   colors[1] = color(0, 175, 239);
   colors[2] = color(0, 255, 0);
+
   for(i = 0; i < numberOfTunnels; i++){
      tunnels[i] = new tunnel();
   }
+
   tunnels[0].drawing = true;
   dude = new character();
+<<<<<<< Updated upstream
+  block = new block();
+=======
   fill(0);
   rect(0, 0, displayWidth, displayHeight);
-  block = new block();
+>>>>>>> Stashed changes
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
-  inv = new invader();
+  for(i = 0; i < maxPowerups; i++) {
+    powerups[i] = new block();
+  }
 }
 
 function draw(){
   if(state === stateStart){
+    fill(0);
+    rect(0, 0, displayWidth, displayHeight);
     drawStartScreen();
   }else if(state === statePlaying){
     playGame();
   }else if(state === stateGameOver){
-    fill(255);
-    rect(0, 0, displayWidth, displayHeight);
-  }
-  else if(state == stateGameOver){
     terminateGame();
+  }else if(state === statePaused){
+    //Paused Game
   }
-
-  for(i = 0; i < numberOfObstacles; i++){
-    drawObstacle(obstacles[i]);
-  }
-  drawCharacter();
-  drawObstacle(o);
-  drawInvader();
 }
 
 function keyPressed(){
   if(state === stateStart){
     state = statePlaying;
   }else if(state === statePlaying){
-    if(keyCode === LEFT_ARROW){
-      dude.x-=dude.speed;
+    if(keyCode === LEFT_ARROW && (dude.x - dude.speed) >= 0){
+        dude.x-=dude.speed;
     }
-    if(keyCode === RIGHT_ARROW){
+    if(keyCode === RIGHT_ARROW && ((dude.x + 42) + dude.speed) <= displayWidth){
       dude.x+=dude.speed;
     }
-    if(keyCode === DOWN_ARROW){
+    if(keyCode === DOWN_ARROW && ((dude.y + 207) + dude.speed) <= displayHeight){
       dude.y+=dude.speed;
     }
-    if(keyCode === UP_ARROW){
+    if(keyCode === UP_ARROW && (dude.y - dude.speed >= 0)){
       dude.y-=dude.speed;
     }
+  }else if(state === stateGameOver){
+    state=stateStart;
+    restartState();
+  }else if(state === statePaused){
+    state=statePlaying;
   }
   return false;
+}
+
+function keepWithinBounds(){
+  if(dude.x <= 0){
+    dude.x+=dude.speed;
+  }else if(dude.x >= displayWidth){
+    dude.x-=dude.speed;
+  }else if(dude.y <= 0){
+    dude.y+=dude.speed;
+  }else if(dude.y >= displayHeight){
+    dude.y-=dude.speed;
+  }
 }
 
 function keyTyped(){
@@ -133,12 +158,21 @@ function keyTyped(){
   }
 }
 
+function restartState(){
+  dude = new character();
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i] = new obstacle();
+  }
+  for(i = 0; i < numberOfTunnels; i++){
+     tunnels[i].size = 0;
+  }
+}
+
 function drawStartScreen(){
   image(startImg, 0, 0, displayWidth, displayHeight);
 }
 
-function terminateGame()
-{
+function terminateGame(){
   image(gameOverImg, 0, 0, displayWidth, displayHeight);
 }
 
@@ -149,9 +183,15 @@ function playGame(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
+  textSize(40);
+  text("Score: " + score, 10, 30); 
+  score+=1;
+  fill(0, 102, 153);
+
   drawObstacles();
   drawCharacter();
   collisionDetection();
+  drawPowerups();
 }
 
 function drawCharacter(){
@@ -222,10 +262,12 @@ function collisionDetection(){
   }
 }
 
+
+
 function hitObstacle(obstacle){
-  if(obstacle.x <= dude.x
+  if(obstacle.x <= dude.x + 50
     && obstacle.x+obstacle.size >= dude.x
-    && obstacle.y <= dude.y
+    && obstacle.y <= dude.y + 80
     && obstacle.y+obstacle.size >= dude.y){
     state = stateGameOver;
   }
@@ -266,14 +308,20 @@ function drawObstacles(){
   }
 }
 
-/// Block stuff
-function block(){
-  this.x = displayWidth / 2;
-  this.y = displayHeight / 2;
+function drawPowerups() {
+  var rand = Math.floor(Math.random()*100);
+  if (rand === 5 && activePowerupCount < 10) {
+      activePowerupCount+=1;
+  }
+  for(i = 0; i < activePowerupCount; ++i) {
+    image(blocks.blue[0], powerups[i].x, powerups[i].y);
+  }
 }
 
-function randBlock(){
-  var rand = Math.floor(Math.random()*3) + 1;
+/// Block stuff
+function block(){
+  this.x = Math.floor(Math.random()*displayWidth);
+  this.y = Math.floor(Math.random()*displayHeight);
 }
 
 function invader(){
