@@ -100,9 +100,15 @@ function keyPressed(){
       dude.y-=dude.speed;
     }
   }else if(state === stateGameOver){
-    state=stateStart;
-    restartState();
-  }else if(state === statePaused){
+    if(restartGame){
+      toggleSubmission();
+    }
+      // TODO: write data to the server ibm is hosting for the hackathon to store top
+
+      // httpPost([ibm server endpoint], entry, json, function() {
+      //  console.log("Score posted succesfully");
+      // })
+    }else if(state === statePaused){
     state=statePlaying;
   }
   return false;
@@ -142,10 +148,17 @@ function restartState(){
 
 function drawStartScreen(){
   image(startImg, 0, 0, displayWidth, displayHeight);
+  restartGame = false;
 }
+
+var gameOverOn = true;
+var restartGame = false;
 
 function terminateGame(){
   image(gameOverImg, 0, 0, displayWidth, displayHeight);
+  if(gameOverOn){
+    toggleSubmission();
+  }
 }
 
 function playGame(){
@@ -159,7 +172,7 @@ function playGame(){
   fill(0);
   noStroke();
   rect(0, 0, 220, 35);
-  fill(0, 102, 153);
+  fill(colors[1]);
   text("Score: " + score, 10, 30); 
   score+=1;
 

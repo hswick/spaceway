@@ -7,5 +7,29 @@
     <script src="sketch.js"></script>
   <head>
   <body>
+  	<form id="nameSubmission" style="display:none;">
+Enter your name: <input type='text'/>
+<input type='submit' 
+	onclick="restartHTML()"
+	value='Submission'/>
+<p id="scoreDisplay" style="display:none;"></p>
+</form>
+  	<script type="text/javascript">
+  		function toggleSubmission() {
+  			var formId = document.getElementById("nameSubmission");
+  			formId.style.display = "block";
+  			var scoreId = document.getElementById("scoreDisplay");
+  			scoreId.style.display = "block";
+  			scoreId.innerHTML = "Your score: " + score;
+  		}
+  		function restartHTML(){
+  			var formId = document.getElementById("nameSubmission");
+  			formId.style.display = "none";
+  			var scoreId = document.getElementById("scoreDisplay");
+  			scoreId.style.display = "none";
+  			gameOverOn = false;
+  			restartGame = true;
+  		}
+  	</script>
   </body>
 </html>
