@@ -14,6 +14,7 @@ var nautImg;
 var numberOfObstacles = 100;
 var obstacles = [];
 var startImg;
+var gameOverImg
 
   // Blocks
   var block;
@@ -63,6 +64,7 @@ function preload(){
     ]
   };
   startImg = loadImage("images/SpacewayName.png");
+  gameOverImg = loadImage("images/gameover.jpg");
 }
 
 function setup(){
@@ -90,8 +92,7 @@ function draw(){
   }else if(state === statePlaying){
     playGame();
   }else if(state === stateGameOver){
-    fill(255);
-    rect(0, 0, displayWidth, displayHeight);
+    terminateGame();
   }
 }
 
@@ -123,6 +124,10 @@ function keyTyped(){
 
 function drawStartScreen(){
   image(startImg, 0, 0, displayWidth, displayHeight);
+}
+
+function terminateGame(){
+  image(gameOverImg, 0, 0, displayWidth, displayHeight);
 }
 
 function playGame(){
