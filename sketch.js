@@ -175,6 +175,7 @@ function tunnelLoop(){
   }
 }
 
+
 function drawTunnel(tunnel){
   if(tunnel.drawing){
     stroke(tunnel.color, tunnel.a);
