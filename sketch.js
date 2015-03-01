@@ -17,9 +17,7 @@ var startImg;
 var gameOverImg;
 var score = 0;
 
-var maxPowerups = 10;
-var powerups = [];
-var activePowerupCount = 0;
+var powerups;
 var music;
 
   // Blocks
@@ -29,48 +27,21 @@ var music;
   var inv;
   var invAxis;
 
+  //Powerups
+  var slowmo;
+  var life;
+
 function preload(){
   nautImg = loadImage("images/naut.png");
-
-  blocks = {
-    "blue" : [
-        loadImage("images/block_b1.png"),
-        loadImage("images/block_b2.png"),
-        loadImage("images/block_b3.png")
-    ],
-    "green" : [
-        loadImage("images/block_g1.png"),
-        loadImage("images/block_g2.png"),
-        loadImage("images/block_g3.png")
-    ],
-    "grey" : [
-        loadImage("images/block_grey1.png"),
-        loadImage("images/block_grey2.png")
-    ],
-    "orange" : [
-        loadImage("images/block_o1.png"),
-        loadImage("images/block_o2.png"),
-        loadImage("images/block_o3.png")
-    ],
-    "pink" : [
-        loadImage("images/block_p1.png"),
-        loadImage("images/block_p2.png"),
-        loadImage("images/block_p3.png")
-    ],
-    "white" : [
-        loadImage("images/block_w1.png"),
-        loadImage("images/block_w2.png"),
-        loadImage("images/block_w3.png")
-    ],
-    "yellow" : [
-        loadImage("images/block_y1.png"),
-        loadImage("images/block_y2.png"),
-        loadImage("images/block_y3.png")
-    ]
-  };
   startImg = loadImage("images/SpacewayName.png");
   gameOverImg = loadImage("images/gameover.jpg");
   music = new Audio('Starway.m4a');
+  powerups = {
+    "slowmo": loadImage("images/block_b1.png"),
+    "life": loadImage("images/heart.png")
+  };
+  slowmo = new block();
+  life = new block();
 }
 
 function setup(){
@@ -91,9 +62,6 @@ function setup(){
   dude = new character();
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
-  }
-  for(i = 0; i < maxPowerups; i++) {
-    powerups[i] = new block();
   }
   music.play();
 }
@@ -164,6 +132,7 @@ function restartState(){
      tunnels[i].size = 0;
   }
   score = 0;
+  resetPowerUps();
 }
 
 function drawStartScreen(){
@@ -308,19 +277,19 @@ function drawObstacles(){
 }
 
 function drawPowerups() {
-  var rand = Math.floor(Math.random()*100);
-  if (rand === 5 && activePowerupCount < 10) {
-      activePowerupCount+=1;
-  }
-  for(i = 0; i < activePowerupCount; ++i) {
-    image(blocks.blue[0], powerups[i].x, powerups[i].y);
-  }
+  image(powerups["slowmo"], slowmo.x, slowmo.y);
+  image(powerups["life"], life.x, life.y);
+}
+
+function resetPowerUps(){
+  slowmo = new block();
+  life = new block();
 }
 
 /// Block stuff
 function block(){
-  this.x = Math.floor(Math.random()*displayWidth);
-  this.y = Math.floor(Math.random()*displayHeight);
+  this.x = random(0, displayWidth);
+  this.y = random(0, displayHeight);
 }
 
 function invader(){
