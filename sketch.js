@@ -186,7 +186,7 @@ function character(){
   this.x = displayWidth / 2;
   this.y = displayHeight / 2;
   this.speed = 20;
-  this.lives = 1;
+  this.lives = 0;
 }
 
 function tunnel(){
@@ -312,8 +312,8 @@ function resetPowerUps(){
 
 /// Block stuff
 function block(){
-  this.x = random(0, displayWidth);
-  this.y = random(0, displayHeight);
+  this.x = random(displayWidth / 4, displayWidth - displayWidth / 4);
+  this.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   this.timer = 0;
   this.hit = false;
 }
@@ -329,8 +329,8 @@ function hitLife(){
     && life.y <= dude.y + 80
     && life.y+20 >= dude.y){
     dude.lives++;
-    life.x = random(0, displayWidth);
-    life.y = random(0, displayHeight);
+    life.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    life.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   }
 }
 
@@ -340,8 +340,8 @@ function hitSlowmo(){
     && slowmo.x+20 >= dude.x
     && slowmo.y <= dude.y + 80
     && slowmo.y+20 >= dude.y){
-    slowmo.x = random(0, displayWidth);
-    slowmo.y = random(0, displayHeight);
+    slowmo.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].speedX = random(-1, 1);
     obstacles[i].speedY = random(-1, 1);
@@ -351,34 +351,19 @@ function hitSlowmo(){
   }
   if(slowmo.hit){
     slowmo.timer++;
-  }
-  if(slowmo.timer === 200){
-    slowmo.hit = false;
+    if(slowmo.x <= dude.x + 50
+    && slowmo.x+20 >= dude.x
+    && slowmo.y <= dude.y + 80
+    && slowmo.y+20 >= dude.y){
     slowmo.timer = 0;
-  for(i = 0; i < numberOfObstacles; i++){
-    obstacles[i].speedX = random(-5, 5);
-    obstacles[i].speedY = random(-5, 5);
-  }
-  }
-}
-
-function hitSlowmo(){
-  if(!slowmo.hit){
-    if(slowmo.x <= dude.x + 50
-    && slowmo.x+20 >= dude.x
-    && slowmo.y <= dude.y + 80
-    && slowmo.y+20 >= dude.y){
-    slowmo.x = random(0, displayWidth);
-    slowmo.y = random(0, displayHeight);
+    slowmo.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].speedX = random(-1, 1);
     obstacles[i].speedY = random(-1, 1);
   }
   slowmo.hit = true;
   }
-  }
-  if(slowmo.hit){
-    slowmo.timer++;
   }
   if(slowmo.timer === 200){
     slowmo.hit = false;
@@ -396,8 +381,8 @@ function hitClear(){
     && clear.x+20 >= dude.x
     && clear.y <= dude.y + 80
     && clear.y+20 >= dude.y){
-    clear.x = random(0, displayWidth);
-    clear.y = random(0, displayHeight);
+    clear.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i].x = -100;
     obstacles[i].y = -100;
@@ -408,7 +393,22 @@ function hitClear(){
   }
   }
   if(clear.hit){
+    clear.timer = 0;
     clear.timer++;
+        if(clear.x <= dude.x + 50
+    && clear.x+20 >= dude.x
+    && clear.y <= dude.y + 80
+    && clear.y+20 >= dude.y){
+    clear.x = random(displayWidth / 8, displayWidth - displayWidth / 8);
+    clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = -100;
+    obstacles[i].y = -100;
+    obstacles[i].speedX = 0;
+    obstacles[i].speedY = 0;
+  }
+  clear.hit = true;
+  }
   }
   if(clear.timer === 200){
     clear.hit = false;
