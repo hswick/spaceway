@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 var stateStart = 0;
 var statePlaying = 1;
@@ -16,6 +17,23 @@ var obstacles = [];
 var o;
 var startImg;
 
+=======
+  
+  // Tunnel related variables
+  var tunnelCntr = 0;
+  var numberOfTunnels= 10;
+  var tunnels = [];
+  var colors = [];
+
+  // Character
+  var dude;
+  var nautImg;
+
+  // Obstacles
+  var numberOfObstacles = 10;
+  var obstacles = [];
+  var o;
+>>>>>>> 51fbe75a825884a7247e62868eccb798b63cba39
 
   // Blocks
   var block;
@@ -23,6 +41,9 @@ var startImg;
 
 function preload(){
   nautImg = loadImage("images/naut.png");
+<<<<<<< HEAD
+  startImg = loadImage("images/SpacewayName.png");
+=======
 
   blocks = {
     "blue" : [
@@ -60,7 +81,7 @@ function preload(){
         loadImage("images/block_y3.png")
     ]
   };
-  startImg = loadImage("images/SpacewayName.png");
+>>>>>>> 51fbe75a825884a7247e62868eccb798b63cba39
 }
 
 function setup(){
@@ -89,6 +110,8 @@ function draw(){
   }else if(state === statePlaying){
     playGame();
   }
+<<<<<<< HEAD
+=======
 
   for(i = 0; i < numberOfObstacles; i++){
     drawObstacle(obstacles[i]);
@@ -96,6 +119,7 @@ function draw(){
   drawCharacter();
   drawObstacle(o);
   drawBlock();
+>>>>>>> 51fbe75a825884a7247e62868eccb798b63cba39
 }
 
 function keyPressed(){
