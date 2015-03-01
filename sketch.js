@@ -19,6 +19,7 @@ var score = 0;
 
 var powerups;
 var music;
+var input = "";
 
   // Blocks
   var blocks = {};
@@ -100,8 +101,26 @@ function keyPressed(){
       dude.y-=dude.speed;
     }
   }else if(state === stateGameOver){
-    state=stateStart;
-    restartState();
+    if(keyCode == BACKSPACE || keyCode == DELETE){
+      input = "";
+    }
+    if(keyCode == ENTER || keyCode == RETURN || keyCode == ESCAPE){
+      state=stateStart;
+      restartState();
+      var entry = {
+        "name" : input,
+        "score": score
+      }
+      // TODO: write data to the server ibm is hosting for the hackathon to store top
+
+      // httpPost([ibm server endpoint], entry, json, function() {
+      //  console.log("Score posted succesfully");
+      // })
+      input = "";
+    }
+    else{
+      input += key;
+    }
   }else if(state === statePaused){
     state=statePlaying;
   }
@@ -146,6 +165,10 @@ function drawStartScreen(){
 
 function terminateGame(){
   image(gameOverImg, 0, 0, displayWidth, displayHeight);
+  fill(0,2,240);
+  noStroke();
+  textSize(40);
+  text("Input Name: " + input, 500, 600);
 }
 
 function playGame(){
@@ -159,7 +182,7 @@ function playGame(){
   fill(0);
   noStroke();
   rect(0, 0, 220, 35);
-  fill(0, 102, 153);
+  fill(colors[1]);
   text("Score: " + score, 10, 30); 
   score+=1;
 
