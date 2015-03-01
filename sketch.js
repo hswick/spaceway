@@ -21,6 +21,10 @@ var startImg;
   var block;
   var blocks = {};
 
+  // Invader
+  var inv;
+  var invAxis;
+
 function preload(){
   nautImg = loadImage("images/naut.png");
 
@@ -80,7 +84,7 @@ function setup(){
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
-  
+  inv = new invader();
 }
 
 function draw(){
@@ -95,7 +99,7 @@ function draw(){
   }
   drawCharacter();
   drawObstacle(o);
-  drawBlock();
+  drawInvader();
 }
 
 function keyPressed(){
@@ -217,17 +221,30 @@ function drawObstacle(obstacle){
 }
 
 
-// Block stuff
+/// Block stuff
 function block(){
   this.x = displayWidth / 2;
   this.y = displayHeight / 2;
 }
 
-function drawBlock(){
-    noStroke();
-    image(blocks.green[1], block.x, block.y);
-}
-
 function randBlock(){
   var rand = Math.floor(Math.random()*3) + 1;
+}
+
+function invader(){
+  this.x = Math.floor(Math.random()*displayWidth);
+  this.y = Math.floor(Math.random()*displayHeight);
+}
+
+var b = 14;
+function drawInvader(){
+  var col3row1 = image(blocks.grey[1], inv.x + b, inv.y);
+  var col3row2 = image(blocks.grey[1], inv.x + b, inv.y - b);
+  var col3row3 = image(blocks.grey[1], inv.x + b, inv.y - 2*b);
+  var col1row1 = image(blocks.grey[1], inv.x - b, inv.y);
+  var col1row2 = image(blocks.grey[1], inv.x - b, inv.y - b);
+  var col1row2 = image(blocks.grey[1], inv.x - b, inv.y - 2*b);
+  var col2row1 = image(blocks.grey[1], inv.x, inv.y + b/2);
+  var col2row2 = image(blocks.grey[1], inv.x, inv.y - b/2);
+  var col2row3 = image(blocks.grey[1], inv.x, inv.y - b - b/2);
 }
