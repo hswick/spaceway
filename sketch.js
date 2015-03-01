@@ -6,12 +6,12 @@ var statePaused = 3;
 var state = stateStart;
 
 var tunnelCntr = 0;
-var numberOfTunnels= 10;
+var numberOfTunnels= 25;
 var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 10;
+var numberOfObstacles = 100;
 var obstacles = [];
 var startImg;
 
@@ -215,17 +215,30 @@ function hitObstacle(obstacle){
 }
 
 function obstacle(){
-  this.x = 200;
-  this.y = 200;
-  this.size = 100;
-  this.speedX = random(-1, 1);
-  this.speedY = random(-1, 1);
+  this.x = displayWidth / 2;
+  this.y = 10;
+  this.size = 20;
+  this.speedX = random(-5, 5);
+  this.speedY = random(-5, 5);
 }
 
 function drawObstacle(obstacle){
   fill(255);
   noStroke();
   rect(obstacle.x, obstacle.y, obstacle.size, obstacle.size);
+  moveObstacle(obstacle);
+}
+
+function moveObstacle(obstacle){
+  if(obstacle.x >= displayWidth){
+    obstacle.x = 0;
+  }else if(obstacle.x <= 0){
+    obstacle.x = displayWidth;
+  }else if(obstacle.y >= displayHeight){
+    obstacle.y = 0;
+  }else if(obstacle.y <= 0){
+    obstacle.y = displayHeight;
+  }
   obstacle.x += obstacle.speedX;
   obstacle.y += obstacle.speedY;
 }
