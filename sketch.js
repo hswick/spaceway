@@ -19,6 +19,7 @@ var score = 0;
 
 var powerups;
 var music;
+var input = "";
 
   // Blocks
   var blocks = {};
@@ -100,15 +101,37 @@ function keyPressed(){
       dude.y-=dude.speed;
     }
   }else if(state === stateGameOver){
+<<<<<<< HEAD
     if(restartGame){
       toggleSubmission();
     }
+=======
+    if(keyCode == BACKSPACE || keyCode == DELETE){
+      input = "";
+    }
+    if(keyCode == ENTER || keyCode == RETURN || keyCode == ESCAPE){
+      state=stateStart;
+      restartState();
+      var entry = {
+        "name" : input,
+        "score": score
+      }
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
       // TODO: write data to the server ibm is hosting for the hackathon to store top
 
       // httpPost([ibm server endpoint], entry, json, function() {
       //  console.log("Score posted succesfully");
       // })
+<<<<<<< HEAD
     }else if(state === statePaused){
+=======
+      input = "";
+    }
+    else{
+      input += key;
+    }
+  }else if(state === statePaused){
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
     state=statePlaying;
   }
   return false;
@@ -156,9 +179,16 @@ var restartGame = false;
 
 function terminateGame(){
   image(gameOverImg, 0, 0, displayWidth, displayHeight);
+<<<<<<< HEAD
   if(gameOverOn){
     toggleSubmission();
   }
+=======
+  fill(0,2,240);
+  noStroke();
+  textSize(40);
+  text("Input Name: " + input, 500, 600);
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
 }
 
 function playGame(){

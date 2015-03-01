@@ -11,15 +11,15 @@ var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 50;
+var numberOfObstacles = 5;
 var obstacles = [];
 var startImg;
 var gameOverImg;
 var score = 0;
 
-var maxPowerups = 10;
-var powerups = [];
-var activePowerupCount = 0;
+var powerups;
+var music;
+var input = "";
 
   // Blocks
   var blocks = {};
@@ -28,47 +28,24 @@ var activePowerupCount = 0;
   var inv;
   var invAxis;
 
+  //Powerups
+  var slowmo;
+  var life;
+  var clear;
+
 function preload(){
   nautImg = loadImage("images/naut.png");
-
-  blocks = {
-    "blue" : [
-        loadImage("images/block_b1.png"),
-        loadImage("images/block_b2.png"),
-        loadImage("images/block_b3.png")
-    ],
-    "green" : [
-        loadImage("images/block_g1.png"),
-        loadImage("images/block_g2.png"),
-        loadImage("images/block_g3.png")
-    ],
-    "grey" : [
-        loadImage("images/block_grey1.png"),
-        loadImage("images/block_grey2.png")
-    ],
-    "orange" : [
-        loadImage("images/block_o1.png"),
-        loadImage("images/block_o2.png"),
-        loadImage("images/block_o3.png")
-    ],
-    "pink" : [
-        loadImage("images/block_p1.png"),
-        loadImage("images/block_p2.png"),
-        loadImage("images/block_p3.png")
-    ],
-    "white" : [
-        loadImage("images/block_w1.png"),
-        loadImage("images/block_w2.png"),
-        loadImage("images/block_w3.png")
-    ],
-    "yellow" : [
-        loadImage("images/block_y1.png"),
-        loadImage("images/block_y2.png"),
-        loadImage("images/block_y3.png")
-    ]
-  };
   startImg = loadImage("images/SpacewayName.png");
   gameOverImg = loadImage("images/gameover.jpg");
+  music = new Audio('Starway.m4a');
+  powerups = {
+    "slowmo": loadImage("images/block_b1.png"),
+    "life": loadImage("images/heart.png"),
+    "clear": loadImage("images/block_grey1.png")
+  };
+  slowmo = new block();
+  life = new block();
+  clear = new block();
 }
 
 function setup(){
@@ -87,18 +64,10 @@ function setup(){
 
   tunnels[0].drawing = true;
   dude = new character();
-<<<<<<< Updated upstream
-  block = new block();
-=======
-  fill(0);
-  rect(0, 0, displayWidth, displayHeight);
->>>>>>> Stashed changes
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
-  for(i = 0; i < maxPowerups; i++) {
-    powerups[i] = new block();
-  }
+  music.play();
 }
 
 function draw(){
@@ -132,9 +101,37 @@ function keyPressed(){
       dude.y-=dude.speed;
     }
   }else if(state === stateGameOver){
-    state=stateStart;
-    restartState();
+<<<<<<< HEAD
+    if(restartGame){
+      toggleSubmission();
+    }
+=======
+    if(keyCode == BACKSPACE || keyCode == DELETE){
+      input = "";
+    }
+    if(keyCode == ENTER || keyCode == RETURN || keyCode == ESCAPE){
+      state=stateStart;
+      restartState();
+      var entry = {
+        "name" : input,
+        "score": score
+      }
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
+      // TODO: write data to the server ibm is hosting for the hackathon to store top
+
+      // httpPost([ibm server endpoint], entry, json, function() {
+      //  console.log("Score posted succesfully");
+      // })
+<<<<<<< HEAD
+    }else if(state === statePaused){
+=======
+      input = "";
+    }
+    else{
+      input += key;
+    }
   }else if(state === statePaused){
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
     state=statePlaying;
   }
   return false;
@@ -160,20 +157,38 @@ function keyTyped(){
 
 function restartState(){
   dude = new character();
+  obstacles = [];
+  numberOfObstacles = 5;
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
   }
   for(i = 0; i < numberOfTunnels; i++){
      tunnels[i].size = 0;
   }
+  score = 0;
+  resetPowerUps();
 }
 
 function drawStartScreen(){
   image(startImg, 0, 0, displayWidth, displayHeight);
+  restartGame = false;
 }
+
+var gameOverOn = true;
+var restartGame = false;
 
 function terminateGame(){
   image(gameOverImg, 0, 0, displayWidth, displayHeight);
+<<<<<<< HEAD
+  if(gameOverOn){
+    toggleSubmission();
+  }
+=======
+  fill(0,2,240);
+  noStroke();
+  textSize(40);
+  text("Input Name: " + input, 500, 600);
+>>>>>>> d780ef81459edfd2404e26e9a9a6ed7e82aeea18
 }
 
 function playGame(){
@@ -184,14 +199,32 @@ function playGame(){
      drawTunnel(tunnels[i]);
   }
   textSize(40);
+  fill(0);
+  noStroke();
+  rect(0, 0, 220, 35);
+  fill(colors[1]);
   text("Score: " + score, 10, 30); 
   score+=1;
-  fill(0, 102, 153);
+
+  fill(0);
+  noStroke();
+  rect(displayWidth - 200, 0, 100, 35);
+  fill(colors[0]);
+  text("<3: " + dude.lives, displayWidth - 200, 30);
 
   drawObstacles();
   drawCharacter();
   collisionDetection();
   drawPowerups();
+  hitLife();
+  hitSlowmo();
+  hitClear();
+  if(score % 100 === 0){
+    for(i = 0; i < 5; i++){
+      obstacles.push(new obstacle());
+      numberOfObstacles++;
+    }
+  }
 }
 
 function drawCharacter(){
@@ -202,6 +235,7 @@ function character(){
   this.x = displayWidth / 2;
   this.y = displayHeight / 2;
   this.speed = 20;
+  this.lives = 1;
 }
 
 function tunnel(){
@@ -262,14 +296,19 @@ function collisionDetection(){
   }
 }
 
-
-
 function hitObstacle(obstacle){
   if(obstacle.x <= dude.x + 50
     && obstacle.x+obstacle.size >= dude.x
     && obstacle.y <= dude.y + 80
     && obstacle.y+obstacle.size >= dude.y){
-    state = stateGameOver;
+    obstacle.x = random(0, displayWidth);
+    obstacle.y = random(0, displayHeight);
+    if(dude.lives === 0){
+      state = stateGameOver;
+    }else{
+      dude.lives--;
+      console.log(dude.lives);
+    }
   }
 }
 
@@ -309,24 +348,127 @@ function drawObstacles(){
 }
 
 function drawPowerups() {
-  var rand = Math.floor(Math.random()*100);
-  if (rand === 5 && activePowerupCount < 10) {
-      activePowerupCount+=1;
-  }
-  for(i = 0; i < activePowerupCount; ++i) {
-    image(blocks.blue[0], powerups[i].x, powerups[i].y);
-  }
+  image(powerups["slowmo"], slowmo.x, slowmo.y);
+  image(powerups["life"], life.x, life.y);
+  image(powerups["clear"], clear.x, clear.y);
+}
+
+function resetPowerUps(){
+  slowmo = new block();
+  life = new block();
+  clear = new block();
 }
 
 /// Block stuff
 function block(){
-  this.x = Math.floor(Math.random()*displayWidth);
-  this.y = Math.floor(Math.random()*displayHeight);
+  this.x = random(displayWidth / 4, displayWidth - displayWidth / 4);
+  this.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  this.timer = 0;
+  this.hit = false;
 }
 
 function invader(){
   this.x = Math.floor(Math.random()*displayWidth);
   this.y = Math.floor(Math.random()*displayHeight);
+}
+
+function hitLife(){
+    if(life.x <= dude.x + 50
+    && life.x+20 >= dude.x
+    && life.y <= dude.y + 80
+    && life.y+20 >= dude.y){
+    dude.lives++;
+    life.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
+    life.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  }
+}
+
+function hitSlowmo(){
+  if(!slowmo.hit){
+    if(slowmo.x <= dude.x + 50
+    && slowmo.x+20 >= dude.x
+    && slowmo.y <= dude.y + 80
+    && slowmo.y+20 >= dude.y){
+    slowmo.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
+    slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-1, 1);
+    obstacles[i].speedY = random(-1, 1);
+  }
+  slowmo.hit = true;
+  }
+  }
+  if(slowmo.hit){
+    slowmo.timer++;
+    if(slowmo.x <= dude.x + 50
+    && slowmo.x+20 >= dude.x
+    && slowmo.y <= dude.y + 80
+    && slowmo.y+20 >= dude.y){
+    slowmo.timer = 0;
+    slowmo.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
+    slowmo.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-1, 1);
+    obstacles[i].speedY = random(-1, 1);
+  }
+  slowmo.hit = true;
+  }
+  }
+  if(slowmo.timer === 200){
+    slowmo.hit = false;
+    slowmo.timer = 0;
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-5, 5);
+    obstacles[i].speedY = random(-5, 5);
+  }
+  }
+}
+
+function hitClear(){
+  if(!clear.hit){
+    if(clear.x <= dude.x + 50
+    && clear.x+20 >= dude.x
+    && clear.y <= dude.y + 80
+    && clear.y+20 >= dude.y){
+    clear.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
+    clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = -100;
+    obstacles[i].y = -100;
+    obstacles[i].speedX = 0;
+    obstacles[i].speedY = 0;
+  }
+  clear.hit = true;
+  }
+  }
+  if(clear.hit){
+    clear.timer = 0;
+    clear.timer++;
+        if(clear.x <= dude.x + 50
+    && clear.x+20 >= dude.x
+    && clear.y <= dude.y + 80
+    && clear.y+20 >= dude.y){
+    clear.x = random(displayWidth / 10, displayWidth - displayWidth / 10);
+    clear.y = random(displayHeight / 4, displayHeight - displayHeight / 4);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = -100;
+    obstacles[i].y = -100;
+    obstacles[i].speedX = 0;
+    obstacles[i].speedY = 0;
+  }
+  clear.hit = true;
+  }
+  }
+  if(clear.timer === 200){
+    clear.hit = false;
+    clear.timer = 0;
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].x = displayWidth / 2;
+    obstacles[i].y = 10;
+    obstacles[i].speedX = random(-5, 5);
+    obstacles[i].speedY = random(-5, 5);
+  }
+  }
 }
 
 var b = 14;
