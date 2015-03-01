@@ -11,7 +11,7 @@ var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 100;
+var numberOfObstacles = 0;
 var obstacles = [];
 var startImg;
 var gameOverImg
@@ -69,16 +69,20 @@ function preload(){
 
 function setup(){
   createCanvas(windowWidth, windowHeight);
+
+  fill(0);
+  rect(0, 0, displayWidth, displayHeight);
+
   colors[0] = color(255, 0, 255);
   colors[1] = color(0, 175, 239);
   colors[2] = color(0, 255, 0);
+
   for(i = 0; i < numberOfTunnels; i++){
      tunnels[i] = new tunnel();
   }
+
   tunnels[0].drawing = true;
   dude = new character();
-  fill(0);
-  rect(0, 0, displayWidth, displayHeight);
   block = new block();
   for(i = 0; i < numberOfObstacles; i++){
     obstacles[i] = new obstacle();
@@ -88,11 +92,15 @@ function setup(){
 
 function draw(){
   if(state === stateStart){
+    fill(0);
+    rect(0, 0, displayWidth, displayHeight);
     drawStartScreen();
   }else if(state === statePlaying){
     playGame();
   }else if(state === stateGameOver){
     terminateGame();
+  }else if(state === statePaused){
+    //Paused Game
   }
 }
 
@@ -100,25 +108,52 @@ function keyPressed(){
   if(state === stateStart){
     state = statePlaying;
   }else if(state === statePlaying){
-    if(keyCode === LEFT_ARROW){
-      dude.x-=dude.speed;
+    if(keyCode === LEFT_ARROW && (dude.x - dude.speed) >= 0){
+        dude.x-=dude.speed;
     }
-    if(keyCode === RIGHT_ARROW){
+    if(keyCode === RIGHT_ARROW && ((dude.x + 42) + dude.speed) <= displayWidth){
       dude.x+=dude.speed;
     }
-    if(keyCode === DOWN_ARROW){
+    if(keyCode === DOWN_ARROW && ((dude.y + 207) + dude.speed) <= displayHeight){
       dude.y+=dude.speed;
     }
-    if(keyCode === UP_ARROW){
+    if(keyCode === UP_ARROW && (dude.y - dude.speed >= 0)){
       dude.y-=dude.speed;
     }
+  }else if(state === stateGameOver){
+    state=stateStart;
+    restartState();
+  }else if(state === statePaused){
+    state=statePlaying;
   }
   return false;
+}
+
+function keepWithinBounds(){
+  if(dude.x <= 0){
+    dude.x+=dude.speed;
+  }else if(dude.x >= displayWidth){
+    dude.x-=dude.speed;
+  }else if(dude.y <= 0){
+    dude.y+=dude.speed;
+  }else if(dude.y >= displayHeight){
+    dude.y-=dude.speed;
+  }
 }
 
 function keyTyped(){
   if(key === 'p'){
     state = statePaused;
+  }
+}
+
+function restartState(){
+  dude = new character();
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i] = new obstacle();
+  }
+  for(i = 0; i < numberOfTunnels; i++){
+     tunnels[i] = new tunnel();
   }
 }
 
@@ -137,7 +172,8 @@ function playGame(){
   for(i = 0; i < numberOfTunnels; i++){
      drawTunnel(tunnels[i]);
   }
-  drawObstacles();
+  drawObstacles();  
+  //keepWithinBounds();
   drawCharacter();
   collisionDetection();
 }
