@@ -11,7 +11,7 @@ var tunnels = [];
 var colors = [];
 var dude;
 var nautImg;
-var numberOfObstacles = 50;
+var numberOfObstacles = 5;
 var obstacles = [];
 var startImg;
 var gameOverImg;
@@ -162,6 +162,8 @@ function playGame(){
   drawCharacter();
   collisionDetection();
   drawPowerups();
+  hitLife();
+  hitSlowmo();
 }
 
 function drawCharacter(){
@@ -172,6 +174,7 @@ function character(){
   this.x = displayWidth / 2;
   this.y = displayHeight / 2;
   this.speed = 20;
+  this.lives = 1;
 }
 
 function tunnel(){
@@ -237,7 +240,14 @@ function hitObstacle(obstacle){
     && obstacle.x+obstacle.size >= dude.x
     && obstacle.y <= dude.y + 80
     && obstacle.y+obstacle.size >= dude.y){
-    state = stateGameOver;
+    obstacle.x = random(0, displayWidth);
+    obstacle.y = random(0, displayHeight);
+    if(dude.lives === 0){
+      state = stateGameOver;
+    }else{
+      dude.lives--;
+      console.log(dude.lives);
+    }
   }
 }
 
@@ -295,6 +305,31 @@ function block(){
 function invader(){
   this.x = Math.floor(Math.random()*displayWidth);
   this.y = Math.floor(Math.random()*displayHeight);
+}
+
+function hitLife(){
+    if(life.x <= dude.x + 50
+    && life.x+20 >= dude.x
+    && life.y <= dude.y + 80
+    && life.y+20 >= dude.y){
+    dude.lives++;
+    life.x = random(0, displayWidth);
+    life.y = random(0, displayHeight);
+  }
+}
+
+function hitSlowmo(){
+  if(slowmo.x <= dude.x + 50
+    && slowmo.x+20 >= dude.x
+    && slowmo.y <= dude.y + 80
+    && slowmo.y+20 >= dude.y){
+    slowmo.x = random(0, displayWidth);
+    slowmo.y = random(0, displayHeight);
+  for(i = 0; i < numberOfObstacles; i++){
+    obstacles[i].speedX = random(-1, 1);
+    obstacles[i].speedY = random(-1, 1);
+  }
+  }
 }
 
 var b = 14;
